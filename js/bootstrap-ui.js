@@ -251,13 +251,15 @@
 		getCity: function(args,curLevel,curId,FN){
 			 console.log(curLevel);
 			 $.ajax({
-	            url: args.url+curLevel,
+	            url: args.url+curLevel+curId,
+	            method: 'post',
 	            data: {
 	                'level': curLevel+1,
 	                'pid': curId,
 	            },
 	            success: function(data){
-	                console.log(data);
+	                data = JSON.parse(data);
+	                console.log(data.success);
 	                if(data.success){
 	                	console.log(data);
 	                	FN(city.getCityStr(curLevel+1,data.list));
@@ -273,6 +275,7 @@
 		getAllCity: function(args){
 			$.ajax({
 				url: args.url,
+				method: 'post',
 				data: {id: args.id},
 				success: function(data){
 					if(data.success){
@@ -382,6 +385,7 @@
 		search.init(this,options);
 	}
 })(jQuery);
+/*多选框*/
 (function($){
 	var checkbox = {
 		init: function(obj,args){
@@ -410,6 +414,7 @@
 		},option))
 	}
 })(jQuery);
+/*下拉框*/
 (function($){
 	var select = {
 		init: function(obj,args){
@@ -437,6 +442,52 @@
 		select.init(this,$.extend({
 			'select':[],
 		},option));
+	}
+})(jQuery);
+/*表格生成*/
+(function($){
+	var table = {
+		init:function(obj,args){
+			this.fillHtml(obj,args);
+			this.bindEvent(obj,args);
+		},
+		fillHtml:function(obj,args){
+			var actions = args.actions,
+				thead = action = tbody = actBtn = '';
+			if(actions.length>0){
+				action = '<th>操作</th>';
+				actBtn = '<td>'+actions.map(function(i,e){
+					var btnClass = e%2==0?'default':'primary';
+					return '<button class="btn btn-'+btnClass+' btn-'+i.type+'">'+i.label+'</button>'
+				}).join('')+'</td>';
+			};
+			thead = '<thead><tr>'+args.data.thead.map(function(i,e){
+				return '<th>'+i+'</th>';
+			}).join('')+action+'</tr></thead>';
+			$.each(args.data.tbody,function(e,i){
+				var tr = '';
+				for(var k in i){
+					tr += '<td class="td-'+k+'">'+i[k]+'</td>';
+				}
+				tbody += '<tr id="'+i.id+'">'+tr+actBtn+'</tr>'
+			});
+			$(obj).html('<table class="table table-hover table-bordered">'+thead+tbody+'</table>')
+		},
+		bindEvent: function(obj,args){
+			$.each(args.actions,function(i,e){
+				if(typeof(e.callback)=='function'){
+					$(obj).on('click','.btn-'+e.type,function(){
+						e.callback($(this).parent('td').siblings('.td-id').html());
+					})
+				}
+			})
+		}
+	};
+	$.fn.addTable = function(option){
+		table.init(this,$.extend({
+			'data':'',
+			'actions':[],
+		},option))
 	}
 })(jQuery);
 /*全局配置变量*/
@@ -512,6 +563,7 @@
 		},option));
 	}
 })(jQuery);
+/*页面组件初始化*/
 (function($){
 	var pageWidgets = {
 		init: function(args){

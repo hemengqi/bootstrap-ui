@@ -9,35 +9,31 @@
 <body>
     <div class="wrap">
         <div class="border-box">
-            <div class="breadcrumbCnt">
-               <!--  <ol class="breadcrumb border-box bottom padding">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Library</a></li>
-                    <li class="active">Data</li>
-                </ol> -->
-            </div>
+            <div class="breadcrumbCnt"></div>
             <div class="listBox wrap">
                 <!-- 筛选容器 -->
-                <div class="fillter-box">
+                <div class="fillterBox">
                     <div id="fillter" class="urlForm"></div>
                     <div class="listBar clearfix">
                          <!-- 日期选择 -->
                         <div id="timePicker" class="pull-left urlForm"></div>
                         <!-- 搜索框 -->
                         <div id="search" class="col-xs-2 urlForm"></div>
-                        
-                       
                         <!-- 筛选城市 -->
                         <div id="cityPicker" class="pull-left urlForm"></div>
-                        <!-- 多选框 -->
-                        <div id="checkPicker" class="pull-right urlForm"></div>
                         <!-- 下拉框 -->
                         <div id="select" class="pull-right urlForm"></div>
+                        <!-- 多选框 -->
+                        <div id="checkPicker" class="pull-right urlForm"></div>
+                        
                         
                     </div>
                 </div>
                 <!-- 列表容器 -->
-                <div class="listCnt"></div>
+                <div class="listCnt">
+                    <div class="tableCnt"></div>
+                    <div class="pageCnt"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -47,9 +43,12 @@
     <script src="http://cdn.bootcss.com/bootstrap-datepicker/1.6.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
     <link href="http://cdn.bootcss.com/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <script src="http://cdn.bootcss.com/jquery-mockjax/1.6.1/jquery.mockjax.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap-ui.js"></script>
+    <script type="text/javascript" src="js/mock-min.js"></script>
     <script type="text/javascript" src="js/mock-data.js"></script>
+    <script type="text/javascript" src="js/bootstrap-ui.js"></script>
+    
     <script type="text/javascript">
+
         $.pageInit({
             'setBreadcrumb': {
                 'cnt':'.breadcrumbCnt',
@@ -66,7 +65,7 @@
                 },]
             },
             'setFillters': {
-                'cnt': '.fillter-box',
+                'cnt': '.fillterBox',
                 'config':{
                     //'href': window.location.href,//处理当前url
                     'fillters': {
@@ -287,7 +286,7 @@
                         'addCityPicker': {
                             'cnt': '#cityPicker',
                             'config': {
-                                'url': '/test/',
+                                'url': 'http://www.g.cn/',
                                 'levels': [{
                                     'level': 2,
                                     'label': '省',
@@ -302,14 +301,10 @@
                                     'name': 'town',
                                 },{
                                     'level': 5,
-                                    'label': '片区',
+                                    'label': '街道',
                                     'name': 'district',
-                                },{
-                                    'level': 6,
-                                    'label': '网点',
-                                    'name': 'location',
                                 }],
-                                'endLevel': 6,/*城市终止层级*/
+                                'endLevel': 5,/*默认城市终止层级*/
                                 'input': 'org_id',
                                 'callback': function(id){
                                     console.log('网点id'+id);
@@ -321,6 +316,38 @@
                 }
             },
         });
+        updateTable();
+        function updateTable(){
+            $.ajax({
+                url: 'http://www.g.cn/table',
+                method: 'post',
+                success: function(data){
+                    //console.log(data);
+                    data = JSON.parse(data);
+                    if(data.success){
+                        $('.listCnt').addTable({
+                            'data': data.table,
+                            'actions':[{
+                                'label':'编辑',
+                                'type':'edit',
+                                'callback':function(id){
+                                    console.log('edit'+id);
+                                },
+                            },{
+                                'label':'删除',
+                                'type':'delete',
+                                'callback':function(id){
+                                    console.log('delete'+id);
+                                    $('#'+id).remove();
+                                }
+                            }]
+                        })
+                    }else{
+                        console.log(data.msg);
+                    }
+                }
+            });
+        }
         function updateUrl(){
             var location_url = 'http://127.0.0.1'+"{:U('home/order/order_list')}";//需要更新的url
             var url = '';
@@ -330,6 +357,7 @@
                 }
             });
             console.log(url);
+            updateTable();
            // window.location.href = location_url+url;
         }
     </script>
