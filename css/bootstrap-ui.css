@@ -1,0 +1,93 @@
+body{
+    background: #f3f3f3;
+}
+.wrap{
+    margin: 20px;
+}
+.padding{
+    padding: 20px!important;
+}
+.border-box{
+    border: 1px solid #e5e5e5;
+    background: #fff;
+}
+.border-box.bottom{
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width:  0;
+}
+.glyphicon{
+    top: 0;
+}
+/*筛选*/
+.fillter-box{
+    line-height: 2em;
+}
+.fillter-cnt{
+    border-top: 1px solid #ddd;
+}
+.fillter-box .f_line{
+    border-bottom: 1px solid #ddd;
+    background: #f2f2f2;
+}
+.fillter-box .f_label{
+    color:#666;
+}
+.fillter-box .f_cnt{
+    background: #fff;
+}
+.fillter-box label {
+    margin: 0;
+}
+.fillter-box .f_item{
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 3px;
+    text-decoration: none;
+    width: 130px;
+    padding-left: 10px;
+    font-weight: normal;
+}
+.fillter-box .f_item:hover,
+.fillter-box .f_item.active{
+    background: #0094FF;
+    color: #fff;
+}
+.hidden.show{
+    display: block!important;
+    visibility: visible!important;
+}
+.fillter-action{
+    width: 180px;
+    margin: 0 auto;
+}
+.fillter-action .action-btn{
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-top: none;
+    cursor: pointer;
+}
+.fillter-action .action-btn + .action-btn{
+    border-left: 0;
+}
+/*日期选择*/
+.date-group{
+    width: 300px;
+}
+/*城市选择*/
+.cityPicker{
+    position: relative;
+}
+.city-box{
+    position: absolute;
+    z-index: 3000;
+    width: 500px;
+    background: #Fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+.select-item{
+    cursor: pointer;
+}

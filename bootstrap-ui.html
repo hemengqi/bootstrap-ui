@@ -1,0 +1,337 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="utf8">
+    <title>Bootstrap ui组件</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-ui.css">
+</head>
+<body>
+    <div class="wrap">
+        <div class="border-box">
+            <div class="breadcrumbCnt">
+               <!--  <ol class="breadcrumb border-box bottom padding">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Library</a></li>
+                    <li class="active">Data</li>
+                </ol> -->
+            </div>
+            <div class="listBox wrap">
+                <!-- 筛选容器 -->
+                <div class="fillter-box">
+                    <div id="fillter" class="urlForm"></div>
+                    <div class="listBar clearfix">
+                         <!-- 日期选择 -->
+                        <div id="timePicker" class="pull-left urlForm"></div>
+                        <!-- 搜索框 -->
+                        <div id="search" class="col-xs-2 urlForm"></div>
+                        
+                       
+                        <!-- 筛选城市 -->
+                        <div id="cityPicker" class="pull-left urlForm"></div>
+                        <!-- 多选框 -->
+                        <div id="checkPicker" class="pull-right urlForm"></div>
+                        <!-- 下拉框 -->
+                        <div id="select" class="pull-right urlForm"></div>
+                        
+                    </div>
+                </div>
+                <!-- 列表容器 -->
+                <div class="listCnt"></div>
+            </div>
+        </div>
+    </div>
+    <script src="http://cdn.bootcss.com/jquery/1.10.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap-datepicker/1.6.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/jquery-mockjax/1.6.1/jquery.mockjax.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-ui.js"></script>
+    <script type="text/javascript" src="js/mock-data.js"></script>
+    <script type="text/javascript">
+        $.pageInit({
+            'setBreadcrumb': {
+                'cnt':'.breadcrumbCnt',
+                'newpage': false,
+                'list':[{
+                    'label':'商家管理',
+                    'link': '#',
+                },{
+                    'label':'商家列表',
+                    'link': '#',
+                },{
+                    'label':'商家查看',
+                    'link': '#',
+                },]
+            },
+            'setFillters': {
+                'cnt': '.fillter-box',
+                'config':{
+                    //'href': window.location.href,//处理当前url
+                    'fillters': {
+                        /*筛选*/
+                        'addFillter':{
+                            'cnt': '#fillter',
+                            'config': {
+                                'options': {
+                                    'show': 3,//默认筛选项数显示
+                                },
+                                //筛选项
+                                'fillters':[{
+                                    'label': {
+                                        'name': 'order_state',
+                                        'cnt':'订单状态',
+                                    },
+                                    'list': [{
+                                        'name':'unpay',
+                                        'cnt':'未支付',
+                                    },{
+                                        'name':'pay',
+                                        'cnt':'已支付'
+                                    },{
+                                        'name':'accept',
+                                        'cnt':'制作中'
+                                    },{
+                                        'name':'delivery',
+                                        'cnt':'配送中'
+                                    },{
+                                        'name':'confirm',
+                                        'cnt':'已完成'
+                                    },{
+                                        'name':'cancel',
+                                        'cnt':'已取消'
+                                    }]
+                                },{
+                                    'label': {
+                                        'name': 'pay_state',
+                                        'cnt':'支付状态',
+                                    },
+                                    'list': [{
+                                        'name': 'pay',
+                                        'cnt':'已付款'
+                                    },{
+                                        'name': 'unpay',
+                                        'cnt': '未付款'
+                                    }]
+                                },{
+                                    'label': {
+                                        'name': 'pay_type',
+                                        'cnt':'支付类型',
+                                    },
+                                    'list': [{
+                                        'name': 'weixinpay',
+                                        'cnt':'微信支付'
+                                    },{
+                                        'name': 'alipay',
+                                        'cnt': '支付宝支付'
+                                    },{
+                                        'name': 'balance',
+                                        'cnt': '余额支付'
+                                    },{
+                                        'name': 'otherpay',
+                                        'cnt': '代付'
+                                    },{
+                                        'name': 'merchantpay',
+                                        'cnt': '商家会员支付'
+                                    },{
+                                        'name': 'wft_pay',
+                                        'cnt': '微信支付'
+                                    }]
+                                },{
+                                    'label': {
+                                        'name': 'order_type',
+                                        'cnt':'订单类别',
+                                    },
+                                    'list': [{
+                                        'name': 'mobile',
+                                        'cnt':'APP'
+                                    },{
+                                        'name': 'normal',
+                                        'cnt': '微信'
+                                    },{
+                                        'name': 'supermarket',
+                                        'cnt': '超市pad'
+                                    },{
+                                        'name': 'third_part',
+                                        'cnt': '第三方订单'
+                                    },{
+                                        'name': 'scan_order',
+                                        'cnt': '门店支付订单'
+                                    }]
+                                },{
+                                    'label': {
+                                        'name': 'from_type',
+                                        'cnt':'订单来源',
+                                    },
+                                    'list': [{
+                                        'name': 'DB',
+                                        'cnt':'DB'
+                                    },{
+                                        'name': 'EE',
+                                        'cnt': 'EE'
+                                    },{
+                                        'name': 'BB',
+                                        'cnt': 'BB'
+                                    },{
+                                        'name': 'MM',
+                                        'cnt': 'MM'
+                                    },{
+                                        'name': 'KK',
+                                        'cnt': 'KK'
+                                    }]
+                                },{
+                                    'label': {
+                                        'name': 'rstate',
+                                        'cnt':'退单状态',
+                                    },
+                                    'list': [{
+                                        'name': 'normal',
+                                        'cnt':'正常状态'
+                                    },{
+                                        'name': 'askrefund',
+                                        'cnt': '申请退款中'
+                                    },{
+                                        'name': 'berefund',
+                                        'cnt': '已退款'
+                                    },{
+                                        'name': 'norefund',
+                                        'cnt': '拒绝退款'
+                                    },{
+                                        'name': 'normal_norefund',
+                                        'cnt': '正常&拒绝退款'
+                                    }]
+                                }],
+                                'callback': function(search){
+                                    updateUrl();
+                                }
+                            }
+                        },
+                        /*时间选择*/
+                        'addTimePicker':{
+                            'cnt': '#timePicker',
+                            'config': {
+                                'callback': function(date){
+                                    updateUrl();
+                                }
+                            }
+                        },
+                        /*订单类型*/
+                        'addCheckbox': {
+                            'cnt':'#checkPicker',
+                            'config':{
+                                'input':[{
+                                    'type':'checkbox',
+                                    'id': 'search_sale_type_1',
+                                    'name':'search_sale_type_1',
+                                    'val': 1,
+                                    'label': '堂食',
+                                },{
+                                    'type':'checkbox',
+                                    'id': 'search_sale_type_2',
+                                    'name':'search_sale_type_2',
+                                    'val': 2,
+                                    'label': '外卖',
+                                }],
+                                'callback': function(check){
+                                    updateUrl();
+                                }
+                            }
+                        },
+                        /*下拉框*/
+                        'addSelect': {
+                            'cnt': '#select',
+                            'config': {
+                                'selects': [{
+                                    'name': 'itemCount',
+                                    'options':[{
+                                        'label': '每页5条',
+                                        'val': '5',
+                                        'default': true,
+                                    },{
+                                        'label': '每页20条',
+                                        'val': '20'
+                                    },{
+                                        'label': '每页50条',
+                                        'val': '50'
+                                    },]
+                                },{
+                                    'name': 'orderBy',
+                                    'options':[{
+                                        'label': '价格',
+                                        'val': 'price',
+                                        'default': true,
+                                    },{
+                                        'label': '日期',
+                                        'val': 'date'
+                                    },{
+                                        'label': '数量',
+                                        'val': 'count'
+                                    },]
+                                }],
+                                'callback': function(select){
+                                    updateUrl();
+                                }
+                            }
+                        },
+                        /*输入框搜索*/
+                        'addSearch': {
+                            'cnt': '#search',
+                            'config': {
+                                'callback': function(search){
+                                    updateUrl();
+                                }
+                            }
+                        },
+                        /*联动选择城市*/
+                        'addCityPicker': {
+                            'cnt': '#cityPicker',
+                            'config': {
+                                'url': '/test/',
+                                'levels': [{
+                                    'level': 2,
+                                    'label': '省',
+                                    'name': 'province',
+                                },{
+                                    'level': 3,
+                                    'label': '市',
+                                    'name': 'city',
+                                },{
+                                    'level': 4,
+                                    'label': '区',
+                                    'name': 'town',
+                                },{
+                                    'level': 5,
+                                    'label': '片区',
+                                    'name': 'district',
+                                },{
+                                    'level': 6,
+                                    'label': '网点',
+                                    'name': 'location',
+                                }],
+                                'endLevel': 6,/*城市终止层级*/
+                                'input': 'org_id',
+                                'callback': function(id){
+                                    console.log('网点id'+id);
+                                    updateUrl();
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        });
+        function updateUrl(){
+            var location_url = 'http://127.0.0.1'+"{:U('home/order/order_list')}";//需要更新的url
+            var url = '';
+            $('.urlForm').each(function(){
+                if($(this).find('form').serialize()){
+                    url += '&'+$(this).find('form').serialize();
+                }
+            });
+            console.log(url);
+           // window.location.href = location_url+url;
+        }
+    </script>
+</body>
+</html>
