@@ -75,7 +75,7 @@ Mock.mock('http://www.g.cn/47',{
 		"level":"5"
 	}]
 });
-Mock.mock('http://www.g.cn/table',{
+Mock.mock('http://www.g.cn/table/',{
 	"success": true,
 	"msg":"",
 	"table":{
@@ -88,5 +88,54 @@ Mock.mock('http://www.g.cn/table',{
 			"mobilie|13500000000-13599999999": 1,
 			"balance|0-5000": 1,
 		}]
-	}
+	},
+	"total|30-100": 1,
+});
+Mock.mock('http://www.g.cn/table/5',{
+	"success": true,
+	"msg":"",
+	"table":{
+		"thead":["商家编号","商家名称","创建时间","联系人","联系电话","余额"],
+		"tbody|5":[{
+			"id|100-999": 1,
+			"name":'@ctitle(5,8)',
+			"time": '@datetime',
+			"user": '@cname',
+			"mobilie|13500000000-13599999999": 1,
+			"balance|0-5000": 1,
+		}]
+	},
+	"total": 50,
+});
+Mock.mock('http://www.g.cn/table/10',{
+	"success": true,
+	"msg":"",
+	"table":{
+		"thead":["商家编号","商家名称","创建时间","联系人","联系电话","余额"],
+		"tbody|10":[{
+			"id|100-999": 1,
+			"name":'@ctitle(5,8)',
+			"time": '@datetime',
+			"user": '@cname',
+			"mobilie|13500000000-13599999999": 1,
+			"balance|0-5000": 1,
+		}]
+	},
+	"total": 50,
+});
+Mock.mock('http://www.g.cn/table/20',{
+	"success": true,
+	"msg":"",
+	"table":{
+		"thead":["商家编号","商家名称","创建时间","联系人","联系电话","余额"],
+		"tbody|20":[{
+			"id|100-999": 1,
+			"name":'@ctitle(5,8)',
+			"time": '@datetime',
+			"user": '@cname',
+			"mobilie|13500000000-13599999999": 1,
+			"balance|0-5000": 1,
+		}]
+	},
+	"total": 50,
 })

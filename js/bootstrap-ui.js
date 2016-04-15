@@ -249,7 +249,6 @@
 				});
 		},
 		getCity: function(args,curLevel,curId,FN){
-			 console.log(curLevel);
 			 $.ajax({
 	            url: args.url+curLevel+curId,
 	            method: 'post',
@@ -259,9 +258,8 @@
 	            },
 	            success: function(data){
 	                data = JSON.parse(data);
-	                console.log(data.success);
 	                if(data.success){
-	                	console.log(data);
+	                	//console.log(data);
 	                	FN(city.getCityStr(curLevel+1,data.list));
 	                }else{
 	                	FN(data.msg);
@@ -448,6 +446,7 @@
 (function($){
 	var table = {
 		init:function(obj,args){
+			this.unbindEvent(obj);
 			this.fillHtml(obj,args);
 			this.bindEvent(obj,args);
 		},
@@ -481,13 +480,144 @@
 					})
 				}
 			})
-		}
+		},
+		//解绑事件
+		unbindEvent:function(obj){
+			return (function(){
+				obj.off('click');
+			})();
+		},
 	};
 	$.fn.addTable = function(option){
 		table.init(this,$.extend({
 			'data':'',
 			'actions':[],
 		},option))
+	}
+})(jQuery);
+/*分页生成*/
+(function($){
+	var pages = {
+		init:function(obj,args){
+			this.unbindEvent(obj);
+			this.fillHtml(obj,args);
+			this.bindEvent(obj,args);
+		},
+		//填充html
+		fillHtml:function(obj,args){
+			var liStr = tempC = '' ,cur = args.current, pages = args.pageCount;
+			//obj.empty();
+			console.log(cur);
+			//obj.append('<ul class="pagination"></ul>');
+			//obj = obj.find('ul');
+			/*上一页*/
+			tempC = cur>1? 'prevPage':'disabled';
+			liStr += '<li class="'+tempC+'"><a href="javascript:void(0);">&laquo;</a></li>';
+			tempC = cur==1?'active':'';
+			liStr +='<li class="'+tempC+'"><a class="number" data-num="1" href="javascript:void(0);" >1</a></li>';
+			/*if(args.current > 1){
+				obj.append('<li class="prevPage"><a href="javascript:void(0);">&laquo;</a></li>');
+			}else{
+				obj.remove('.prevPage');
+				obj.append('<li class="disabled"><a href="javascript:void(0);">&laquo;</a></li>');
+			}*/
+			/*中间页码*/
+			/*liStr += (cur-1>2&&pages>5)?'<li><span>...</span></li>':'<li><a data-num="2" href="javascript:void(0);" >2</a></li>';*/
+			var start = Math.min(Math.max(cur-1,2),Math.max(pages-3,2));
+			var end = Math.min(start+2,pages-1);
+			liStr += (start>2&&pages>5)?'<li><span>...</span></li>':'';
+
+			for(;start<=end;start++){
+				tempC = start == cur?'active':'';
+				liStr += '<li class="'+tempC+'"><a class="number" data-num="'+start+'" href="javascript:void(0);" >'+start+'</a></li>';
+			};
+
+			/*下一页*/
+			liStr += pages>end+1?'<li><span>...</span></li>':'';
+
+			tempC = cur == pages?'active':'';
+			liStr += '<li class="'+tempC+'"><a class="number" data-num="'+args.pageCount+'" href="javascript:void(0);" >'+args.pageCount+'</a></li>';
+
+			tempC = pages>end+1? 'nextPage': 'disabled';
+			liStr += '<li class="'+tempC+'"><a href="javascript:void(0);">&raquo;</a></li>';
+
+			$(obj).html('<ul class="pagination">'+liStr+'<li class="small-font"><span>共'+args.total+'条</span></li></ul>');
+			/*if(args.current != 1 && args.current >= 4 && args.pageCount != 4){
+				obj.append('<li><a href="javascript:void(0);" >2</a></li>');
+			}
+			if(args.current-2 > 2 && args.current <= args.pageCount && args.pageCount > 5){
+				obj.append('<li><span>...</span></li>');
+			}*/
+			/*var start = args.current -2,end = args.current+2;
+			if((start > 1 && args.current < 4)||args.current == 1){
+				end++;
+			}
+			if(args.current > args.pageCount-4 && args.current >= args.pageCount){
+				start--;
+			}
+			for (;start <= end; start++) {
+				if(start <= args.pageCount && start >= 1){
+					if(start != args.current){
+						obj.append('<li class="number"><a href="javascript:void(0);">'+ start +'</a></li>');
+					}else{
+						obj.append('<li class="active"><a href="javascript:void(0);">'+ start +'</a></li>');
+					}
+				}
+			}
+			if(args.current + 2 < args.pageCount - 1 && args.current >= 1 && args.pageCount > 5){
+				obj.append('<li><span>...</span></li>');
+			}
+			if(args.current != args.pageCount && args.current < args.pageCount -2  && args.pageCount != 4){
+				obj.append('<li class="number"><a href="javascript:void(0);">'+args.pageCount+'</a></li>');
+			}
+			//下一页
+			if(args.current < args.pageCount){
+				obj.append('<li class="nextPage"><a href="javascript:void(0);">&raquo;</a></li>');
+			}else{
+				//obj.remove('.nextPage');
+				obj.append('<li class="disabled"><a href="javascript:void(0);">&raquo;</a></li>');
+			}
+			//总条数
+			obj.append('<li class="small-font">共'+args.total+'条</li>');*/
+
+		},
+		//绑定事件
+		bindEvent:function(obj,args){
+			$(obj).on("click",".number",function(){
+				var current = parseInt($(this).data('num'));
+				pages.init(obj,{"current":current,"pageCount":args.pageCount,"total":args.total,"callback":args.callback});
+				if(typeof(args.callback)=="function"){
+					args.callback(current);
+				}
+			}).on("click",".prevPage",function(){/*上一页*/
+				console.log($(obj).find(".active"));
+				var current = parseInt($(obj).find(".active").find('a').data('num'))-2;
+				pages.init(obj,{"current":current,"pageCount":args.pageCount,"total":args.total,"callback":args.callback});
+				if(typeof(args.callback)=="function"){
+					args.callback(current);
+				}
+			}).on("click",".nextPage",function(){/*下一页*/
+				var current = parseInt($(obj).find(".active").find('a').data('num'))+2;
+				pages.init(obj,{"current":current,"pageCount":args.pageCount,"total":args.total,"callback":args.callback});
+				if(typeof(args.callback)=="function"){
+					args.callback(current);
+				}
+			});
+		},
+		//解绑事件
+		unbindEvent:function(obj){
+			return (function(){
+				obj.off('click');
+			})();
+		},
+	}
+	$.fn.addPage = function(option){
+		pages.init(this,$.extend({
+			pageCount : 10,
+			current : 1,
+			total: 0,
+			callback : function(){}
+		},option));
 	}
 })(jQuery);
 /*全局配置变量*/
@@ -568,8 +698,13 @@
 	var pageWidgets = {
 		init: function(args){
 			for(var k in args){
-				if(!helper.isEmptyObject(args[k])){
-					pageWidgets[k](args[k]);
+				var type = typeof(args[k]);
+				if(type=="function"){
+					args[k]();
+				}else if(type=="object"){
+					if(!helper.isEmptyObject(args[k])){
+						pageWidgets[k](args[k]);
+					}
 				}
 			}
 		},
@@ -594,10 +729,10 @@
 })(jQuery)
 var helper = {
 	urlToObject: function(url){
+		
 		var i = url.indexOf('&');
         var obj = {};
-        if(i>0){
-            
+        if(i>=0){
             url = url.substring(i+1);
             url = url.split('&');
             $.each(url,function(i,e){

@@ -31,8 +31,8 @@
                 </div>
                 <!-- 列表容器 -->
                 <div class="listCnt">
-                    <div class="tableCnt"></div>
-                    <div class="pageCnt"></div>
+                    <div class="tableCnt"><img style="display:block;margin:20px auto" src="loading.gif"></div>
+                    <div class="pageCnt tx-center"></div>
                 </div>
             </div>
         </div>
@@ -50,6 +50,9 @@
     <script type="text/javascript">
 
         $.pageInit({
+            'init':function(){
+                updateTable(5,1);
+            },
             'setBreadcrumb': {
                 'cnt':'.breadcrumbCnt',
                 'newpage': false,
@@ -244,15 +247,15 @@
                                 'selects': [{
                                     'name': 'itemCount',
                                     'options':[{
-                                        'label': '每页5条',
+                                        'label': '5',
                                         'val': '5',
                                         'default': true,
                                     },{
-                                        'label': '每页20条',
-                                        'val': '20'
+                                        'label': '10',
+                                        'val': '10'
                                     },{
-                                        'label': '每页50条',
-                                        'val': '50'
+                                        'label': '20',
+                                        'val': '20'
                                     },]
                                 },{
                                     'name': 'orderBy',
@@ -269,7 +272,12 @@
                                     },]
                                 }],
                                 'callback': function(select){
-                                    updateUrl();
+                                    
+                                    select = select.split('&');
+                                    select = select[0].split('=')
+                                    updateTable(select[1]);
+                                    console.log(select[1]);
+                                    //updateUrl();
                                 }
                             }
                         },
@@ -316,16 +324,22 @@
                 }
             },
         });
-        updateTable();
-        function updateTable(){
+        function updateTable(perpage,p){
+            if(!perpage){
+                console.log('缺少分页参数');
+                return;
+            };
             $.ajax({
-                url: 'http://www.g.cn/table',
+                url: 'http://www.g.cn/table/'+perpage,
                 method: 'post',
+                data: {
+                    perpage: perpage,
+                },
                 success: function(data){
                     //console.log(data);
                     data = JSON.parse(data);
                     if(data.success){
-                        $('.listCnt').addTable({
+                        $('.tableCnt').addTable({
                             'data': data.table,
                             'actions':[{
                                 'label':'编辑',
@@ -341,6 +355,16 @@
                                     $('#'+id).remove();
                                 }
                             }]
+                        });
+                        $('.pageCnt').addPage({
+                            pageCount:Math.ceil(data.total/perpage),//总页数
+                            current:p,
+                            total:data.total,
+                            callback:function(p){
+                                //更新表格数据
+                                console.log(p);
+                                updateTable(perpage,p);
+                            }
                         })
                     }else{
                         console.log(data.msg);
@@ -356,8 +380,7 @@
                     url += '&'+$(this).find('form').serialize();
                 }
             });
-            console.log(url);
-            updateTable();
+            updateTable(helper.urlToObject(url).itemCount);
            // window.location.href = location_url+url;
         }
     </script>

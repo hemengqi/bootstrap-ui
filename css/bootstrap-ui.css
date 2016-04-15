@@ -16,6 +16,9 @@ body{
     border-right-width: 0;
     border-top-width:  0;
 }
+.tx-center{
+    text-align: center;
+}
 .glyphicon{
     top: 0;
 }
